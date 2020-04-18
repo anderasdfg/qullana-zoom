@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Programar una reunión</title>
+</head>
+<body>
+    <div class="container">
+        <form action="/crear" method="post">        
+		<div class="row">
+			<div class="col-25">
+			<label for="topic">Tema</label>
+			<input type="topic" name ="topic">
+			</div>
+        </div>
+        <div class="row">
+			<div class="col-25">
+			<label for="date">Fecha</label>
+			<input type="datetime-local" name ="date">
+			</div>
+        </div>
+        <div class="row">
+			<div class="col-25">
+			<label for="password">Cree una contraseña:</label>
+			<input type="password" name ="password">
+			</div>
+        </div>
+		<div class="row">
+			<input type="submit" value="Submit">
+		</div>
+	</form>
+    </div>          
+</body>
+</html>
