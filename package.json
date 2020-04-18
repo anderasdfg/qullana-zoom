@@ -1,7 +1,7 @@
 {
-  "name": "zoom-api-qullana",
+  "name": "zoom-api-jwt",
   "version": "1.0.0",
-  "description": "Zoom API QULLANA",
+  "description": "Zoom API JWT Sample app",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -18,7 +18,15 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.3"
-  }
+  },
+  "repository": {
+    "type": "git"   
+  },
+  "keywords": [
+    "jwt"
+  ],
+  "bugs": {
+    "url": "https://github.com/zoom/zoom-api-jwt/issues"
+  },
+  "homepage": "https://github.com/zoom/zoom-api-jwt#readme"
 }
-
-  
