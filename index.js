@@ -115,7 +115,6 @@ app.post('/crear/:correo/:topic/:datemeeting/:password/:duration',(req,res)=>{
               "approval_type": 0,
               "registration_type": 1,    
               "enforce_login": false,
-              "alternative_hosts": "anderleyc@gmail.com",
               "global_dial_in_countries": [     
               ],
               "registrants_email_notification": false
