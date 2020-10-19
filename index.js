@@ -76,84 +76,87 @@ rp(options)
     });
 });
 
-//'2020-04-17 15:00:00 UTC-5'
-app.post('/crear/:correo/:topic/:datemeeting/:password/:duration',(req,res)=>{   
-    topic       = req.params.topic;
-    datemeeting = req.params.datemeeting;//Math.floor(new Date(req.params.datemeeting) / 1000); // => 1301418381
-    password    = req.params.password;
-    duration    = req.params.duration
-    //console.log(req.body);    
+//api para crear reuniones
+app.post('/crear/:correo/:topic/:datemeeting/:password/:key/:secret/', (req, res) => {
+
+    topic = req.params.topic;
+    datemeeting = req.params.datemeeting;
+    password = req.params.password;
+    medicoalternativo = req.params.medico;
+    key = req.params.key;
+    secret = req.params.secret;
+
+    //usamos el api key y api secret obtenidos por parametros para la creación del token para poder usar las APIs
+    const payload = {
+        iss: key,
+        exp: ((new Date()).getTime() + 5000)
+    };
+    const apitoken = jwt.sign(payload, secret);
+
+
     var options = {
         method: 'POST',
-        //You can use a different uri if you're making an API call to a different Zoom endpoint.
-        uri: "https://api.zoom.us/v2/users/"+req.params.correo+"/meetings",             
+        //End point para crear reuniones
+        uri: "https://api.zoom.us/v2/users/" + req.params.correo + "/meetings",
         headers: {
-           // 'User-Agent': 'Zoom-api-Jwt-Request',
             'content-type': 'application/json',
-            'Authorization': 'bearer ' + token
+            'Authorization': 'bearer ' + apitoken
         },
-        body:{
+        body: {
             "topic": topic,
             "type": 1,
             "start_time": datemeeting,
-            "duration": duration,
+            "duration": 60,
             "timezone": "GMT -5",
             "password": password,
             "agenda": "CITA VIRTUAL",
             "recurrence": {
-              "type": 1    
+                "type": 1
             },
             "settings": {
-              "host_video": true,
-              "participant_video": true,
-              "cn_meeting": false,
-              "in_meeting": false,
-              "join_before_host": true,
-              "mute_upon_entry": false,
-              "watermark": false,
-              "use_pmi": false,
-              "approval_type": 0,
-              "registration_type": 1,    
-              "enforce_login": false,
-              "global_dial_in_countries": [     
-              ],
-              "registrants_email_notification": false
+                "host_video": true,
+                "participant_video": true,
+                "cn_meeting": false,
+                "in_meeting": false,
+                "join_before_host": true,
+                "mute_upon_entry": false,
+                "watermark": false,
+                "use_pmi": false,
+                "approval_type": 2,
+                "registration_type": 0,
+                "auto_recording": "cloud",
+                "enforce_login": false,
+                //"alternative_hosts": medicoalternativo,
+                "global_dial_in_countries": [],
+                "registrants_email_notification": false
             }
-          },
+        },
         json: true //Parse the JSON string in the response
     };
     rp(options)
-    .then(function (response) {
-      //printing the response on the console
-       // console.log('User has', response);
-       resp = response       
-        var title ='<center><h3>Datos de la reunión:</h3></center>' 
-        //Prettify the JSON format using pre tag and JSON.stringify                
-        var body = JSON.stringify(resp, null, 2);
-        var myjson = JSON.parse(body);
+        .then(function(response) {
 
-        var meetingid        = myjson["id"];
-        var start_url        = myjson["start_url"];
-        //var join_url         = myjson["join_url"];
-        //var topicmeeting     = myjson["topic"];
-        var passwordmeeting  = myjson["password"];
-        var linktoJoin       = "https://zoom.us/wc/join/" + meetingid + "?pwd=" + passwordmeeting;
-        
-        // var buttonIniciarReunion = '<a href="'+start_url+'">Inciar reunión</a>'
-        // var buttonUnirseReunion  = '<a href="'+join_url+'">Unirse a la reunión</a>'
-        // var buttonAbrirReunion   = '<a href="'+linktoJoin+'">Abrir a la reunión</a>'
+            resp = response
+            var title = '<center><h3>Datos de la reunión:</h3></center>'
 
-        // var inicio = '<p>Comparte este link con tu paciente: </p>' + linktoJoin 
-        //var result = title + '<code>' +inicio + '<br/>'+ buttonIniciarReunion  + '<br/>' + buttonUnirseReunion +'<br/>' +buttonAbrirReunion+'</code>'
-        var result = "<meeting>" + "<start_url>" + start_url+"</start_url>"+ "<linktojoin>"+ linktoJoin +"</linktojoin>" + "</meeting>";
-        res.send(result);                
-        console.log(result);
-        //console.log(myjson);      
-      //  res.send(resp);      
-    })
-    .catch(function (err) {        
-        console.log('API call failed, reason ', err);
-    });
+            var body = JSON.stringify(resp, null, 2);
+            var myjson = JSON.parse(body);
+
+            var meetingid = myjson["id"];
+            var start_url = myjson["start_url"];
+
+            var passwordmeeting = myjson["password"];
+
+            var linktoJoin = "https://zoom.us/wc/join/" + meetingid + "?pwd=" + passwordmeeting;
+
+            var result = "<meeting>" + "<start_url>" + start_url + "</start_url>" + "<linktojoin>" + linktoJoin + "</linktojoin>" + "</meeting>";
+            res.send(result);
+            console.log(result + body);
+
+        })
+        .catch(function(err) {
+            console.log('API call failed, reason ', err);
+        });
 });
 
 app.listen(app.get('port'), () => console.log(`Example app listening on port ${app.get('port')}!`)); 
