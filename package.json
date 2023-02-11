@@ -17,7 +17,7 @@
     "request-promise": "^4.2.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.20"
   },
   "repository": {
     "type": "git"
